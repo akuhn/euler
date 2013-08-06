@@ -1,4 +1,4 @@
-require 'euler'
+require_relative 'euler'
 
 # Problem 54
 # 10 October 2003
@@ -28,7 +28,7 @@ class String
     when ?Q then 12
     when ?J then 11
     when ?T then 10
-    when ?2..?9 then self[0] - ?0
+    when ?2..?9 then self[0].ord - ?0.ord
     else raise Error
     end
   end
@@ -62,7 +62,7 @@ class Hand
     @groups[0].first
   end
   def straight?
-    return nil unless @ranks.enum_cons(2).all?{|a,b|a==b+1}
+    return nil unless @ranks.each_cons(2).all?{|a,b|a==b+1}
     @ranks.first
   end
   def flush?
@@ -117,8 +117,8 @@ end
 (%w{4D 6S 9H QH QC}.to_hand.full_result > %w{3D 6D 7H QD QS}.to_hand.full_result).should == true
 (%w{2H 2D 4C 4D 4S}.to_hand.full_result > %w{3C 3D 3S 9S 9D}.to_hand.full_result).should == false
 
-Games = `cat poker.txt`.collect do |line|
-  line.split.enum_slice(5).collect{|ary|ary.to_hand}
+Games = `cat poker.txt`.each_line.collect do |line|
+  line.split.each_slice(5).collect{|ary|ary.to_hand}
 end
 
 Games.select{ |a,b| a.full_result > b.full_result }.size.should == 376

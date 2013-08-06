@@ -1,4 +1,4 @@
-require 'euler'
+require_relative 'euler'
 
 # Problem 59
 # 19 December 2003
@@ -11,21 +11,23 @@ require 'euler'
 A = `cat cipher1.txt`.scan(/\d+/).collect(&:to_i)
 A.zip([B=[],C=[],D=[]]*(A.size/3+1)){|e,ary|ary<<e}
 
+Letters = ?a.ord..?z.ord
+
 class Array
   def quality
-    grep(?a..?z).size / size.to_f
+    grep(Letters).size / size.to_f
   end
   def cipher(*key)
     zip(key*self.size).collect{|a,b|a^b}
   end
 end
 
-(?a..?z).detect_max{|k|B.cipher(k).quality}.should == ?g
-(?a..?z).detect_max{|k|C.cipher(k).quality}.should == ?o
-(?a..?z).detect_max{|k|D.cipher(k).quality}.should == ?d
+Letters.detect_max{|k|B.cipher(k).quality}.should == ?g.ord
+Letters.detect_max{|k|C.cipher(k).quality}.should == ?o.ord
+Letters.detect_max{|k|D.cipher(k).quality}.should == ?d.ord
 
-A.cipher(?g,?o,?d).sum.should == 107359
-A.cipher(?g,?o,?d).collect(&:chr).join.should =~ /The Gospel of John/
+A.cipher(*'god'.each_byte).sum.should == 107359
+A.cipher(*'god'.each_byte).collect(&:chr).join.should =~ /The Gospel of John/
 
 
 

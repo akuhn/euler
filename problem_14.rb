@@ -1,4 +1,4 @@
-require 'euler'
+require_relative 'euler'
 
 # The following iterative sequence is defined for the set of positive integers:
 # n = n/2 (n is even)

@@ -1,4 +1,4 @@
-require 'euler'
+require_relative 'euler'
 require 'date'
 
 # Problem 19

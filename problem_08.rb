@@ -1,4 +1,4 @@
-require 'euler'
+require_relative 'euler'
 
 # Find the greatest product of five consecutive digits in the 1000-digit number.
 
@@ -25,5 +25,5 @@ Huge = """
 71636269561882670428252483600823257530420752963450
 """.scan(/\d/).collect(&:to_i)
 
-Huge.enum_cons(5).collect{|five|five.prod}.max.should == 40824
+Huge.each_cons(5).collect{|five|five.prod}.max.should == 40824
 

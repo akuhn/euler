@@ -1,4 +1,4 @@
-require 'euler'
+require_relative 'euler'
 
 # Problem 40
 # 28 March 2003
@@ -14,7 +14,7 @@ Numeric.non_negatives.each do |n|
   break if $s.size > 1.million
 end
 def d(n)
-  $s[n]-?0
+  $s[n].ord-?0.ord
 end
 
 d(7).should == 7

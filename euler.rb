@@ -66,12 +66,6 @@ class String
   end
 end
 
-class NilClass
-  def call(each)
-    each
-  end
-end
-
 module Enumerable
   def sum#{|each|}
     return sum(&:yourself) unless block_given?
@@ -89,7 +83,7 @@ module Enumerable
   end
   def cross(enum)#{|a,b|}
     return enum_for(:cross,enum) unless block_given?
-    each{|a|enum.each{|b|yield a,b}}
+    each{|a|enum.each{|b|yield [a,b]}}
   end
   def group_by#{|each|}
     return enum_for(:group_by) unless block_given?
@@ -129,10 +123,10 @@ class Numeric
     f = 1; 2.upto(self){|n|f*=n}; f
   end
   def digit_sum
-    sum=0;to_s.each_byte{|b|sum+=b-?0};sum
+    to_s.each_byte.inject(0){|sum,b|sum+=b-48}
   end
   def digits
-    ary=[];to_s.each_byte{|b|ary<<b-?0};ary
+    to_s.each_byte.collect{|b|b-48}
   end
   def fraction
     self - self.floor
@@ -142,6 +136,9 @@ class Numeric
   end
   def square?
     (self**0.5).fraction.zero?
+  end
+  def sqrt
+    Math.sqrt(self)
   end
 end
 
@@ -193,7 +190,7 @@ class Numeric
   end
   def prime?
     return false if self < 2
-    !Primes.upto((self**0.5).ceil).detect{ |p| self%p == 0 }
+    not Primes.upto(self.sqrt).detect{ |p| self%p == 0 }
   end
 end
 
@@ -225,6 +222,7 @@ if __FILE__ == $0
   
   # Numeric#digits
   12345.digits.should == [1,2,3,4,5]
+  12345.digit_sum.should == 15
   
   # Array#permutations
   [1,2,3,4].permutations.to_a.size.should == 4.factorial

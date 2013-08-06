@@ -15,7 +15,7 @@ def timeout(pid)
   end 
 end
 
-`ls problem_*.rb`.each do |file|
+`ls problem_*.rb`.each_line do |file|
   fname = file.chomp
   puts "#{"-"*39} #{fname}"
   time = Time.now

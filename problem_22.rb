@@ -1,4 +1,4 @@
-require 'euler'
+require_relative 'euler'
 
 # Problem 22
 # 19 July 2002
@@ -8,7 +8,7 @@ require 'euler'
 
 class String 
   def alphabetical_value
-    val = 0; self.each_byte{|b|val+=(b-?A+1)}; val
+    val = 0; self.each_byte{|b|val+=(b-?A.ord+1)}; val
   end
 end
 

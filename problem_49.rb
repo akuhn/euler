@@ -1,4 +1,4 @@
-require 'euler'
+require_relative 'euler'
 
 # Problem 49
 # 01 August 2003
@@ -11,7 +11,7 @@ class Array
     return enum_for(:find_arithmetic_sequences) unless block_given?
     3.upto(self.size) do |len|
       each_cons(len) do |cons|
-        yield cons.join if cons.enum_cons(2).collect{|a,b|b-a}.uniq.size == 1
+        yield cons.join if cons.each_cons(2).collect{|a,b|b-a}.uniq.size == 1
       end
     end
   end  
@@ -25,4 +25,4 @@ Primes.upto(9999).
   flatten.
   should == ["296962999629"]
   
-# I'm lucky its a consequtive sequence, or else I won't have found it!
+# I'm lucky its a consecutive sequence, or else I won't have found it!

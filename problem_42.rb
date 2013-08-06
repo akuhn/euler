@@ -1,4 +1,4 @@
-require 'euler'
+require_relative 'euler'
 
 # Problem 42
 # 25 April 2003
@@ -15,7 +15,7 @@ end
 
 class String
   def triangle?
-    enum_for(:each_byte).collect{|n|n-?A+1}.sum.triangle?
+    enum_for(:each_byte).collect{|n|n-?A.ord+1}.sum.triangle?
   end
 end
 

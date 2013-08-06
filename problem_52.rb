@@ -1,4 +1,4 @@
-require 'euler'
+require_relative 'euler'
 
 # Problem 52
 # 12 September 2003

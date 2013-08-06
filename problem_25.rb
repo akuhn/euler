@@ -1,4 +1,4 @@
-require 'euler'
+require_relative 'euler'
 
 # The Fibonacci sequence is defined by the recurrence relation:
 # Fn = Fn1 + Fn2, where F1 = 1 and F2 = 1.

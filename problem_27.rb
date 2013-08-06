@@ -1,4 +1,4 @@
-require 'euler'
+require_relative 'euler'
 
 # Euler published the remarkable quadratic formula:
 # n² + n + 41
@@ -22,5 +22,6 @@ end
 len_nsquared_an_b(1,41).should == 40
 len_nsquared_an_b(-79,1601).should == 80
 
-a,b = (-999..999).cross(-999..999).detect_max{|a,b|len_nsquared_an_b(a,b)}
-(a*b).should == -59231
+x = (-999..999).cross(-999..999)
+aa,bb = x.detect_max{|a,b|len_nsquared_an_b(a,b)}
+(aa*bb).should == -59231
