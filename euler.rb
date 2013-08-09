@@ -128,64 +128,75 @@ class Numeric
   end
 end
 
-class Primes
-  include Enumerable
-  def initialize(limit)
-    @primes = Primes.__fetch(@limit = limit)
-  end
-  def self.upto(num,&block)
-    block ? self.new(num).each(&block) : self.new(num)
-  end
-  def each#block
-    @primes.each{|p|break if p > @limit;yield p} 
-  end
-  @@cache = [1]
-  def self.__fetch(limit)
-    return @@cache if limit <= @@cache.last
-    @@cache = sieve_of_eratostenes(limit)
-  end
-  def self.sieve_of_eratostenes(max_value)
-    sieve = Array.new(max_value/2) { |n| 3+n+n }
-    for n in 0...sieve.size do
-      next unless p = sieve[n]
-      (n+p).step(sieve.size,p) { |m| sieve[m] = nil }
+class Primes < Array
+  def factorize(n)
+    raise if n > last * last
+    factors = []
+    self.each do |prime|
+      while (div,mod = n.divmod prime; mod == 0)
+        factors << prime
+        n = div
+      end
+      break if div < prime
     end
-    [2] + sieve.compact
+    factors << n if n > 1
+    return factors
   end
-  def self.[](pos)
-    raise unless pos < @@cache.size
-    @@cache[pos-1] 
+  class <<self
+    def upto(max)
+      sieve_of_eratostenes(max+1).freeze
+    end
+    def cache
+      @cache ||= upto(1_000_000)
+    end
+    def member?(n)
+      return false if n < 2
+      pseudo do |p|
+        q,r = n.divmod p
+        return true if q < p
+        return false if r == 0
+      end
+    end
+    def pseudo
+      yield 2
+      yield 3
+      yield n = 5
+      loop do
+        yield n += 2
+        yield n += 4
+      end
+    end
+    private
+    def sieve_of_eratostenes(upper)
+      sieve = Primes.new(upper/2){|n|1+2*n}
+      for n in 1...sieve.size do
+        next unless p = sieve[n]
+        sieve[n] = nil while (n+=p) < sieve.size
+      end
+      sieve[0] = 2
+      sieve.compact!
+    end
   end
 end
 
-class Numeric
-  def enum_prime_factors
-    num = self;
-    Primes.upto((self**0.5).ceil) do |f|
-      loop do
-        div, mod = num.divmod f 
-        break unless mod == 0
-        yield f
-        return if (num = div) == 1
-      end
-    end
-    yield num
+class Integer
+  def prime?
+    Primes.member? self
   end
   def prime_factors
-    fs = []; enum_prime_factors{|f|fs<<f}; fs
-  end
-  def prime?
-    return false if self < 2
-    not Primes.upto(self.sqrt).detect{ |p| self%p == 0 }
+    Primes.cache.factorize(self)
   end
 end
 
 if __FILE__ == $0
   
-  Primes.upto(43).to_a.should ==
-  [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43]
-  Primes.upto(10_000).all?(&:prime?).should == true
-  ((1..10_000).to_a-Primes.upto(10_000).to_a).any?(&:prime?).should == false
+  Primes.upto(43).should == [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43]
+  
+  prime = Primes.upto(1000)
+  
+  for n in 0..1000 do
+    n.prime?.should == prime.include?(n)
+  end
   
   # Numeric#prime_factors
   48.prime_factors.should == [2,2,2,2,3]
