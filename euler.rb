@@ -1,26 +1,12 @@
 require 'enumerator'
+require 'rspec'
 
 class Object
-  def should
-    Shoulda.new self
-  end
   def pp
     p self; self
   end
   def yourself
     self
-  end
-end
-
-class Shoulda
-  def initialize(value)
-    @value = value
-  end
-  def ==(expected)
-    raise "Expected #{expected.inspect} but found #{@value.inspect} (using ==)." unless @value == expected
-  end
-  def =~(expected)
-    raise "Expected #{expected.inspect} but found #{@value.inspect} (using =~)." unless @value =~ expected
   end
 end
 
