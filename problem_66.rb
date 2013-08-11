@@ -79,7 +79,7 @@ solve_diophantine_eq(7).should == 8
 
 (2..7).max_by{|n|solve_diophantine_eq(n)}.should == 5
 
-(2..10000).max_by{|n|solve_diophantine_eq(n)}.should == 9949
+(2..1000).max_by{|n|solve_diophantine_eq(n)}.should == 661
 
 
 
