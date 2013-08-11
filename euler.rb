@@ -40,12 +40,6 @@ class Array
   end
 end
 
-class Symbol
-  def to_proc
-    Proc.new { |obj,*args| obj.send(self,*args) }
-  end
-end
-
 class String
   def bytes
     bs=[];each_byte{|b|bs<<b};bs
@@ -64,6 +58,7 @@ module Enumerable
   def to_bag#{|each|}
     bag = {}; self.each { |elem| bag[elem] = bag.fetch(elem,0)+1 }; bag
   end
+  alias :freq :to_bag
   def detect_max#{|each|}
     collect{|e|[e,(yield e)]}.max{|a,b|a.last<=>b.last}.first
   end
@@ -75,8 +70,12 @@ module Enumerable
     return enum_for(:group_by) unless block_given?
     gs={};each{|e|gs.fetch(yield(e)){|k|gs[k]=[]}<<e};gs
   end
-  def take(num)
-    ary=[];each{|e|return ary if (ary<<e).size == num}
+  def skip(n)
+    Enumerator.new do |y|
+      each_with_index do |each,i|
+        y << each if not i < n
+      end
+    end
   end
 end
 
@@ -121,7 +120,7 @@ class Numeric
     self*self
   end
   def square?
-    (self**0.5).fraction.zero?
+    Math.sqrt(self).fraction.zero?
   end
   def sqrt
     Math.sqrt(self)
@@ -131,6 +130,7 @@ end
 class Primes < Array
   def factorize(n)
     raise if n > last * last
+    return [] if n < 2
     factors = []
     self.each do |prime|
       while (div,mod = n.divmod prime; mod == 0)
@@ -158,13 +158,8 @@ class Primes < Array
       end
     end
     def pseudo
-      yield 2
-      yield 3
-      yield n = 5
-      loop do
-        yield n += 2
-        yield n += 4
-      end
+      yield 2; yield 3; yield n = 5
+      loop { yield n += 2; yield n += 4 }
     end
     private
     def sieve_of_eratostenes(upper)
@@ -187,6 +182,8 @@ class Integer
     Primes.cache.factorize(self)
   end
 end
+
+Infinity = Float::INFINITY
 
 if __FILE__ == $0
   
