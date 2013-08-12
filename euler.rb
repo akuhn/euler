@@ -166,6 +166,14 @@ class Integer
   def prime_factors
     Primes.cache.factorize(self)
   end
+  def relative_primes
+    arr = [*1..self]
+    self.prime_factors.uniq.each do |p|
+      i = 0
+      arr[i+=p] = nil while i < self
+    end 
+    return arr.compact
+  end
 end
 
 Infinity = Float::INFINITY
