@@ -32,7 +32,8 @@ class Array
 end
 
 1406357289.digits.rather_divisable?.should == true
-(0..9).to_a.permutations.
+
+[*0..9].permutation.
   select{|d|d.rather_divisable?}.
   collect{|n|n.join.to_i}.sum.should == 16695334890
 

@@ -23,21 +23,6 @@ class Array
   def binary_search?(elem)
     binary_search(elem) >= 0
   end
-  def permutation!(num)
-    (2..length).collect do |n|
-      num,r=num.divmod(n);r
-    end.reverse.
-    each_with_index do |f,i|
-      insert(i,delete_at(i+f))
-    end;self
-  end
-  def permutation(num) 
-    dup.permutation! num
-  end
-  def permutations
-    return enum_for(:permutations) unless block_given?
-    (0...self.size.factorial).each { |n| yield permutation(n) }
-  end
 end
 
 class String

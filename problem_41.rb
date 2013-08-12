@@ -5,23 +5,16 @@ require_relative 'euler'
 # We shall say that an n-digit number is pandigital if it makes use of all the digits 1 to n exactly once. For example, 2143 is a 4-digit pandigital and is also prime.
 # What is the largest n-digit pandigital prime that exists?
 
-class Numeric
-  def prime? # less memory exhaustive :prime? 
-    #!Primes.upto((self**0.5).ceil).detect{|n|self%n==0}
-    !(2..(self**0.5).ceil).any?{|n|self%n==0}
-  end
-end
-
 2142.prime?.should == false
 2143.prime?.should == true
 2144.prime?.should == false
 
 def brute_force(r)
-  ary = (1..r).to_a.reverse
-  (0...ary.size.factorial).each do |n|
-    num = ary.permutation(n).join.to_i
+  [*1..r].reverse.permutation do |each|
+    num = each.join.to_i
     return num if num.prime?
-  end;nil
+  end
+  return nil
 end
 
 brute_force(9).should == nil # !digital sum indicates divisable by 3
