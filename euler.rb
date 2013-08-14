@@ -33,8 +33,19 @@ end
 
 class Hash
   def to_proc
-    Proc.new{|each|self[each]}
+    method(:[]).to_proc
   end
+end
+
+class Array
+  def to_proc
+    method(:[]).to_proc
+  end
+end
+
+Memo = Hash.new
+def Memoize(*args)
+  Memo.fetch(args){Memo[args]=yield}
 end
 
 module Enumerable
