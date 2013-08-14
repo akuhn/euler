@@ -31,6 +31,12 @@ class String
   end
 end
 
+class Hash
+  def to_proc
+    Proc.new{|each|self[each]}
+  end
+end
+
 module Enumerable
   def sum#{|each|}
     return sum(&:yourself) unless block_given?
