@@ -145,8 +145,9 @@ class Primes < Array
     return factors
   end
   class <<self
-    def upto(max)
-      sieve_of_eratostenes(max+1).freeze
+    def upto(limit)
+      return [] if limit < 2 
+      sieve_of_eratostenes(limit+1).freeze
     end
     def cache
       @cache ||= upto(1_000_000)
@@ -172,6 +173,7 @@ class Primes < Array
       end
       sieve[0] = 2
       sieve.compact!
+      sieve
     end
   end
 end
@@ -197,6 +199,8 @@ Infinity = Float::INFINITY
 
 if __FILE__ == $0
   
+  Primes.upto(1).should == []
+  Primes.upto(2).should == [2]  
   Primes.upto(43).should == [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43]
   
   prime = Primes.upto(1000)
@@ -229,9 +233,9 @@ if __FILE__ == $0
   12345.digit_sum.should == 15
   
   # Array#permutations
-  [1,2,3,4].permutations.to_a.size.should == 4.factorial
-  [1,2,3,4].permutations.sort_by{|p|p.join.to_i}.should == [1,2,3,4].permutations.to_a
-  [1,2,3,4].permutations.collect{|p|p.sort}.uniq.size.should == 1
+  [1,2,3,4].permutation.to_a.size.should == 4.factorial
+  [1,2,3,4].permutation.sort_by{|p|p.join.to_i}.should == [1,2,3,4].permutation.to_a
+  [1,2,3,4].permutation.collect{|p|p.sort}.uniq.size.should == 1
   
   # Enumerable#sum
   [1,2,3,4].sum.should == 10
