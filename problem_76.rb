@@ -2,9 +2,11 @@ require_relative 'euler'
 
 # Counting summations
 
+Memo = {}
+
 def counting_summations(n,max=(n-1))
   return 1 if n == 0
-  Memoize(n,max) do 
+  Memo.memoize(n,max) do 
     (1..[n,max].min).sum{|k|counting_summations(n-k,k)}
   end
 end

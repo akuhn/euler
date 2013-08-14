@@ -2,9 +2,11 @@ require_relative 'euler'
 
 # Prime summations
 
+Memo = {}
+
 def prime_summations(n,max=n)
   return 1 if n == 0
-  Memoize(n,max) do 
+  Memo.memoize(n,max) do 
     Primes.upto([n,max].min).sum{|k|prime_summations(n-k,k)}
   end
 end

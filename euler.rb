@@ -35,17 +35,18 @@ class Hash
   def to_proc
     method(:[]).to_proc
   end
+  def memoize(*args) # block
+    fetch(args) { self[args] = yield }
+  end
 end
 
 class Array
   def to_proc
     method(:[]).to_proc
   end
-end
-
-Memo = Hash.new
-def Memoize(*args)
-  Memo.fetch(args){Memo[args]=yield}
+  def memoize(index) # block
+    self[index] ||= yield
+  end
 end
 
 module Enumerable
